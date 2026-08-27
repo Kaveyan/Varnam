@@ -1,0 +1,1747 @@
+/* ==========================================================================
+   VARNAM MIND CARE — KOWSALYA MURUGANANTHAM
+   Luxury White Visual Design System & Fluid Interactions
+   ========================================================================== */
+
+:root {
+  /* Color System: Off-White Canvas & Pure White Card Containers */
+  --bg-canvas: #F8F9FB;
+  --bg-card: #FFFFFF;
+  --bg-glass: rgba(255, 255, 255, 0.75);
+  --border-subtle: #E2E4E9;
+  --border-glass: rgba(226, 228, 233, 0.8);
+  
+  --text-main: #0A0A0C;
+  --text-muted: #525866;
+  --text-light: #868C98;
+  
+  --accent-green: #10B981;
+  --accent-gold: #D97706;
+  --accent-soft: #F3F4F6;
+  
+  /* Typography Stacks & Fluid Clamp Scaling */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-serif: 'Instrument Serif', serif;
+  
+  --font-size-h1: clamp(2.5rem, 5vw + 1rem, 4.2rem);
+  --font-size-h2: clamp(2rem, 3.5vw + 0.8rem, 3rem);
+  --font-size-h3: clamp(1.25rem, 1.5vw + 0.8rem, 1.75rem);
+  --font-size-body: clamp(0.95rem, 0.5vw + 0.8rem, 1.15rem);
+
+  /* Layout & Spacing */
+  --section-padding-desktop: 120px;
+  --section-padding-mobile: 64px;
+  --grid-gap-desktop: 80px;
+  --grid-gap-mobile: 24px;
+  
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  
+  --shadow-subtle: 0 4px 20px -2px rgba(10, 10, 12, 0.04);
+  --shadow-hover: 0 20px 40px -4px rgba(10, 10, 12, 0.08);
+}
+
+/* Reset & Global Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-body);
+  background-color: var(--bg-canvas);
+  color: var(--text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Decorative planters hanging from the navbar.
+   z-index -1 keeps them behind all page content but above the canvas colour,
+   and pointer-events: none means they never swallow a click. */
+.hanging-plants {
+  position: absolute;
+  top: 78px;
+  right: 0;
+  z-index: -1;
+  width: clamp(150px, 19vw, 280px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.hanging-plants .plants-plate {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The butterflies were cut out of flower.png and are placed back at the exact
+   spots they occupied, as percentages of the plate, so they scale with it.
+   Two drift paths shared across four butterflies, with different durations and
+   negative delays, so no two ever move in step. */
+.butterfly {
+  position: absolute;
+  height: auto;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.bf-1 {
+  left: 1.55%;
+  top: 8.80%;
+  width: 17.44%;
+  animation: flutterA 9s ease-in-out infinite;
+}
+
+.bf-2 {
+  left: 64.08%;
+  top: 29.31%;
+  width: 18.86%;
+  animation: flutterB 11s ease-in-out infinite -3s;
+}
+
+.bf-3 {
+  left: 22.61%;
+  top: 62.74%;
+  width: 16.02%;
+  animation: flutterA 10.5s ease-in-out infinite -5s;
+}
+
+.bf-4 {
+  left: 82.56%;
+  top: 68.42%;
+  width: 13.70%;
+  animation: flutterB 8.5s ease-in-out infinite -1.5s;
+}
+
+/* translate percentages resolve against the butterfly's own size,
+   so the drift stays proportional at every viewport width */
+@keyframes flutterA {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  20%      { transform: translate(9%, -15%) rotate(-7deg); }
+  45%      { transform: translate(-7%, -27%) rotate(5deg); }
+  70%      { transform: translate(-16%, -11%) rotate(-4deg); }
+  85%      { transform: translate(-5%, 7%) rotate(3deg); }
+}
+
+@keyframes flutterB {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25%      { transform: translate(-11%, -12%) rotate(6deg); }
+  50%      { transform: translate(4%, -24%) rotate(-5deg); }
+  75%      { transform: translate(13%, -8%) rotate(4deg); }
+  90%      { transform: translate(6%, 5%) rotate(-2deg); }
+}
+
+@media (max-width: 900px) {
+  .hanging-plants {
+    top: 70px;
+    width: 130px;
+    opacity: 0.75;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ==========================================================================
+   LOADING SCREEN
+   ========================================================================== */
+
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  /* Pure white, not the off-white canvas: loading.gif carries a solid white
+     backdrop of its own, so anything else leaves a visible square behind it. */
+  background-color: var(--bg-card);
+  /* Fallback: if the script never runs, the overlay still clears itself
+     rather than trapping the visitor behind it. */
+  animation: loaderAutoHide 0.7s ease 3.4s forwards;
+}
+
+.page-loader.is-done {
+  animation: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+}
+
+@keyframes loaderAutoHide {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.loader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 460px;
+}
+
+.loader-anim {
+  width: clamp(160px, 44vw, 220px);
+  height: auto;
+  margin-bottom: 8px;
+  opacity: 0;
+  /* No float here - the gif animates itself; a second motion would fight it */
+  animation: loaderMarkIn 0.7s ease forwards;
+}
+
+@keyframes loaderMarkIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.loader-quote {
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 3.4vw + 0.6rem, 2rem);
+  line-height: 1.35;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  margin-bottom: 34px;
+  opacity: 0;
+  animation: loaderQuoteIn 1s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+}
+
+.loader-quote .serif-italic {
+  display: inline-block;
+  color: var(--accent-green);
+}
+
+@keyframes loaderQuoteIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.loader-bar {
+  width: 132px;
+  height: 2px;
+  border-radius: var(--radius-full);
+  background-color: var(--border-subtle);
+  overflow: hidden;
+}
+
+.loader-bar span {
+  display: block;
+  width: 40%;
+  height: 100%;
+  border-radius: inherit;
+  background-color: var(--text-main);
+  animation: loaderBar 1.5s ease-in-out infinite;
+}
+
+@keyframes loaderBar {
+  0%   { transform: translateX(-110%); }
+  100% { transform: translateX(260%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-anim,
+  .loader-quote {
+    opacity: 1;
+    animation: none;
+  }
+
+  .loader-bar span {
+    animation: none;
+    width: 100%;
+  }
+}
+
+.skip {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+  z-index: 1000;
+}
+.skip:focus {
+  top: 0;
+}
+
+/* Fluid Typography */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+}
+
+.serif-italic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+/* Split Special Characters & Stagger Animations */
+
+/* Word box: keeps a word's inline-block characters on one line */
+.split-text .word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.split-text .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(18px);
+  animation: charEntry 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--char-index, 0) * 28ms);
+}
+
+.split-text .special-char {
+  display: inline-block;
+  color: var(--accent-gold);
+  font-weight: 600;
+  padding: 0 2px;
+  animation: charEntry 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards, specialCharPulse 3s ease-in-out infinite 1s;
+  animation-delay: calc(var(--char-index, 0) * 28ms), 1s;
+}
+
+@keyframes charEntry {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes specialCharPulse {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    color: var(--accent-gold);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.15);
+    color: var(--accent-green);
+  }
+}
+
+/* Button System & Magnetic Effect */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 32px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn--primary {
+  background-color: var(--text-main);
+  color: var(--bg-card);
+  box-shadow: 0 4px 14px rgba(10, 10, 12, 0.15);
+}
+
+.btn--primary:hover {
+  background-color: #27272A;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(10, 10, 12, 0.22);
+}
+
+.btn--secondary {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-subtle);
+}
+
+.btn--secondary:hover {
+  background-color: var(--accent-soft);
+  border-color: var(--text-light);
+  transform: translateY(-2px);
+}
+
+.btn--sm {
+  padding: 10px 20px;
+  font-size: 0.875rem;
+}
+
+/* Navbar CTA: white pill on the off-white canvas.
+   The base .btn carries no colour of its own, so without this the link fell
+   back to the browser's default blue instead of reading as a button. */
+.btn--nav {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border-color: var(--border-subtle);
+  box-shadow: 0 1px 2px rgba(10, 10, 12, 0.04), 0 4px 12px -4px rgba(10, 10, 12, 0.10);
+  letter-spacing: -0.005em;
+}
+
+.btn--nav:hover {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border-color: var(--text-light);
+  box-shadow: 0 2px 4px rgba(10, 10, 12, 0.06), 0 10px 22px -6px rgba(10, 10, 12, 0.16);
+}
+
+.btn--nav:active {
+  box-shadow: 0 1px 2px rgba(10, 10, 12, 0.08);
+}
+
+.btn--full {
+  width: 100%;
+}
+
+.magnetic-btn {
+  will-change: transform;
+}
+
+/* Navbar Component */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: rgba(248, 249, 251, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 18px 0;
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-logo {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  height: 42px;
+  width: auto;
+  flex: none;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.brand-logo:hover .brand-mark {
+  transform: scale(1.06) rotate(-2deg);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--text-main);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.brand-sub {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  white-space: nowrap;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: var(--text-main);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Frosted Glass Availability Badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-full);
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--text-main);
+  box-shadow: var(--shadow-subtle);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-green);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+/* 3D Tilt Card Base */
+.tilt-card {
+  transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tilt-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+/* Hero Section */
+.hero-section {
+  /* Tighter than a normal section - the hero sits right under the navbar */
+  padding: 56px 0 80px 0;
+  position: relative;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--grid-gap-desktop);
+  align-items: center;
+}
+
+/* Gentle float for the hero portrait card.
+   Applied to the wrapper, not .trainer-card - the 3D tilt script writes an
+   inline transform on the card itself, and the two would overwrite each other.
+   Nesting them lets the transforms compose instead. */
+.hero-visual {
+  animation: cardFloat 6.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes cardFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+.hero-tag {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+/* Floating credibility badges */
+.hero-stat-badge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 9px 18px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  will-change: transform;
+  animation: badgeFloat 5.5s ease-in-out infinite;
+}
+
+/* Second badge rides the opposite half of the cycle so they never bob in unison */
+.hero-stat-badge:nth-child(2) {
+  animation-delay: -2.75s;
+}
+
+.hero-stat-badge strong {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+@keyframes badgeFloat {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 4px 14px -6px rgba(10, 10, 12, 0.10);
+  }
+  50% {
+    transform: translateY(-7px);
+    box-shadow: 0 16px 26px -10px rgba(10, 10, 12, 0.14);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-stat-badge {
+    animation: none;
+    box-shadow: var(--shadow-subtle);
+  }
+
+  .hero-visual {
+    animation: none;
+  }
+
+  .butterfly {
+    animation: none;
+  }
+}
+
+.status-badge--inline {
+  background: var(--bg-card);
+}
+
+.hero-title {
+  margin-bottom: 24px;
+}
+
+.hero-description {
+  font-size: var(--font-size-body);
+  color: var(--text-muted);
+  max-width: 560px;
+  margin-bottom: 36px;
+}
+
+.hero-content > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Hero Visual / Trainer Card */
+.trainer-card {
+  position: relative;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-subtle);
+}
+
+.trainer-image-wrap {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  background-color: var(--accent-soft);
+}
+
+.trainer-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.trainer-badge-overlay {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  padding: 12px 18px;
+  background: rgba(10, 10, 12, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-md);
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+}
+
+.trainer-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.trainer-title {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.trainer-card-glass {
+  margin-top: 16px;
+  padding: 16px 20px;
+  background: var(--bg-canvas);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Section Common Headers */
+.section-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 60px auto;
+}
+
+.section-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-gold);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  margin-bottom: 16px;
+}
+
+.section-desc {
+  font-size: var(--font-size-body);
+  color: var(--text-muted);
+}
+
+/* About Section */
+.about-section {
+  padding: var(--section-padding-desktop) 0;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: var(--grid-gap-desktop);
+  align-items: center;
+}
+
+.about-image-wrap {
+  position: relative;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-subtle);
+}
+
+.about-img {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.about-floating-card {
+  position: absolute;
+  bottom: 32px;
+  right: -24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-hover);
+  max-width: 290px;
+}
+
+.floating-icon {
+  font-size: 1.5rem;
+}
+
+.about-floating-card strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.about-floating-card small {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.features-list {
+  list-style: none;
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.features-list li {
+  padding-left: 28px;
+  position: relative;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.features-list li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.features-list li strong {
+  color: var(--text-main);
+}
+
+/* Offerings / Care Section */
+.offerings-section {
+  padding: var(--section-padding-desktop) 0;
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+/* Trailing plant hanging from the section's top border.
+   z-index 0 (not -1) because the section paints its own white background -
+   a negative layer would sit behind it and vanish. It comes first in the DOM,
+   so the offering cards still paint over it. */
+.section-plant {
+  position: absolute;
+  top: 0;
+  left: clamp(0px, 3vw, 48px);
+  z-index: 0;
+  width: clamp(110px, 13vw, 190px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.section-plant img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* On phones the centred heading spans the full container, so the plant can't
+   sit beside it. Instead it hangs in a band of extra top padding above the
+   heading - decorative space rather than a collision. */
+@media (max-width: 900px) {
+  .offerings-section {
+    padding-top: 175px;
+  }
+
+  .section-plant {
+    width: 76px;
+    left: 10px;
+  }
+}
+
+.offerings-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.offering-card {
+  background-color: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  box-shadow: var(--shadow-subtle);
+  position: relative;
+}
+
+.offering-num {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  margin-bottom: 20px;
+}
+
+.offering-card h3 {
+  margin-bottom: 14px;
+}
+
+.offering-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.care-note {
+  text-align: center;
+  margin-top: 48px;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
+
+/* Process Section */
+.process-section {
+  padding: var(--section-padding-desktop) 0;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: var(--grid-gap-desktop);
+  align-items: center;
+}
+
+.steps-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.step-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  box-shadow: var(--shadow-subtle);
+}
+
+.step-num {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  flex-shrink: 0;
+}
+
+.step-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+}
+
+.step-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* Soft Masked Edges Scrolling Reviews Marquee */
+.reviews-section {
+  padding: var(--section-padding-desktop) 0;
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Trailing vine hanging in the top-right corner.
+   Uses a background-image rather than an <img> so that if the file is missing
+   the corner simply stays empty instead of showing a broken-image icon. */
+.corner-vine {
+  position: absolute;
+  top: 0;
+  right: clamp(8px, 4vw, 72px);
+  z-index: 0;
+  width: clamp(75px, 9vw, 135px);
+  aspect-ratio: 138 / 500;   /* matches flower5.png, so contain fills exactly */
+  background-image: url("flower5.png");
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: contain;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.9;
+}
+
+@media (max-width: 900px) {
+  .reviews-section {
+    padding-top: 210px;
+  }
+
+  .corner-vine {
+    width: 56px;
+    right: 10px;
+    opacity: 0.85;
+  }
+}
+
+.marquee-wrapper {
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  animation: marqueeScroll 45s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.review-card {
+  width: 440px;
+  background-color: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.review-stars {
+  color: var(--accent-gold);
+  font-size: 1rem;
+  margin-bottom: 12px;
+  letter-spacing: 2px;
+}
+
+.review-text {
+  font-size: 0.95rem;
+  color: var(--text-main);
+  line-height: 1.5;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.review-author strong {
+  display: block;
+  font-size: 0.9rem;
+  font-family: var(--font-display);
+}
+
+.review-author span {
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+/* Brand Quote Section */
+.brand-quote-section {
+  padding: var(--section-padding-desktop) 0;
+}
+
+.brand-quote-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.brand-logo-img img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 18px 32px rgba(10, 10, 12, 0.10));
+}
+
+.brand-quote p {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 2.5vw + 1rem, 2.75rem);
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+cite {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1rem;
+  font-family: var(--font-display);
+  display: block;
+}
+cite span {
+  display: block;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+}
+
+/* Contact Section */
+.contact-section {
+  padding: var(--section-padding-desktop) 0;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--grid-gap-desktop);
+  align-items: center;
+}
+
+.contact-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 48px 40px;
+  box-shadow: var(--shadow-subtle);
+}
+
+.contact-details {
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  text-decoration: none;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.row-k {
+  color: var(--text-muted);
+}
+
+.row-v {
+  font-weight: 600;
+}
+
+.contact-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.contact-photo {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-subtle);
+}
+
+.contact-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Footer */
+.site-footer {
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border-subtle);
+  padding: 60px 0 40px 0;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  text-align: center;
+}
+
+.footer-brand .brand-name {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+}
+
+.footer-brand p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.footer-brand a {
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-links {
+  display: flex;
+  gap: 28px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 24px;
+  width: 100%;
+}
+
+/* 1-Tap Mobile Sticky Action Bar (< 768px) */
+.mobile-sticky-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-subtle);
+  padding: 12px 16px;
+  gap: 12px;
+}
+
+.mobile-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 0;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.mobile-btn--book {
+  background-color: var(--text-main);
+  color: #FFFFFF;
+}
+
+/* WhatsApp Session Booking Request Modal Dialog */
+.booking-modal {
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0;
+  background: transparent;
+  max-width: 480px;
+  width: 90%;
+  margin: auto;
+  box-shadow: var(--shadow-hover);
+}
+
+.booking-modal::backdrop {
+  background: rgba(10, 10, 12, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.modal-content h3 {
+  font-size: 1.5rem;
+  margin: 6px 0;
+}
+
+.modal-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  background-color: var(--bg-canvas);
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--text-main);
+  background-color: #FFFFFF;
+}
+
+/* Responsive Breakpoints */
+/* Between tablet and desktop the nav has to give something up before it wraps */
+@media (max-width: 1100px) {
+  .navbar .status-badge {
+    display: none;
+  }
+
+  .nav-links {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar__inner {
+    gap: 16px;
+  }
+
+  .nav-links {
+    gap: 14px;
+    font-size: 0.9rem;
+  }
+
+  .navbar .btn--sm {
+    padding: 10px 16px;
+    white-space: nowrap;
+  }
+
+  .brand-mark {
+    height: 38px;
+  }
+
+  /* Least essential link goes first so the CTA never gets clipped */
+  .nav-links a[href="#testimonials"] {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-grid, .about-grid, .process-grid, .brand-quote-grid, .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  /* Once the quote grid stacks, the logo would stretch to the full container
+     width (82% of a phone screen) - cap it so it reads as a mark, not a banner. */
+  .brand-logo-img {
+    max-width: 150px;
+  }
+  
+  .offerings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --section-padding-desktop: 64px;
+  }
+  
+  .nav-links, .nav-actions {
+    display: none;
+  }
+
+  .brand-mark {
+    height: 36px;
+  }
+
+  /* Logo drops out entirely on phones - the quote carries the section on its own */
+  .brand-logo-img {
+    display: none;
+  }
+
+  /* Same for the contact portrait - the booking card is the point on a phone */
+  .contact-photo {
+    display: none;
+  }
+
+  /* Footer nav: five links in a no-wrap flex row shrink until each one breaks
+     mid-phrase on a phone. The page is a single scroll, so drop them. */
+  .footer-links {
+    display: none;
+  }
+  
+  .mobile-sticky-bar {
+    display: flex;
+  }
+
+  body {
+    padding-bottom: 70px;
+  }
+  
+  .contact-card {
+    padding: 32px 24px;
+  }
+}
+
+/* ==========================================================================
+   BOOKING INTAKE FORM (posts to the Varnam Google Form)
+   ========================================================================== */
+
+.form-progress {
+  height: 3px;
+  border-radius: var(--radius-full);
+  background-color: var(--accent-soft);
+  overflow: hidden;
+  margin: 20px 0 10px;
+}
+
+.form-progress__bar {
+  display: block;
+  height: 100%;
+  width: 33.333%;
+  border-radius: inherit;
+  background-color: var(--text-main);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.form-step-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 22px;
+}
+
+.form-step {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: none;
+}
+
+.form-step.is-active {
+  display: block;
+  animation: stepIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.booking-modal .form-group {
+  margin-bottom: 18px;
+}
+
+.booking-modal label,
+.booking-modal .label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 7px;
+}
+
+.req {
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+.field-note {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-light);
+  margin-top: 5px;
+}
+
+.booking-modal input[type="text"],
+.booking-modal input[type="tel"],
+.booking-modal input[type="email"],
+.booking-modal input[type="number"],
+.booking-modal input[type="date"],
+.booking-modal select,
+.booking-modal textarea {
+  width: 100%;
+  padding: 11px 14px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--text-main);
+  background-color: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.booking-modal input:focus,
+.booking-modal select:focus,
+.booking-modal textarea:focus {
+  outline: none;
+  border-color: var(--text-main);
+  box-shadow: 0 0 0 3px rgba(10, 10, 12, 0.06);
+}
+
+.booking-modal .is-invalid {
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+}
+
+.booking-modal textarea {
+  resize: vertical;
+  min-height: 64px;
+}
+
+/* Radio pills */
+.choice-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.choice-grid--stack {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.choice {
+  margin: 0 !important;
+  font-weight: 500 !important;
+  cursor: pointer;
+}
+
+.choice input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.choice span {
+  display: inline-block;
+  padding: 8px 15px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  background-color: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+}
+
+.choice input:checked + span {
+  background-color: var(--text-main);
+  border-color: var(--text-main);
+  color: #FFFFFF;
+}
+
+.choice input:focus-visible + span {
+  box-shadow: 0 0 0 3px rgba(10, 10, 12, 0.12);
+}
+
+.other-input {
+  margin-top: 10px;
+}
+
+/* Consent checkboxes */
+.consent-group {
+  padding: 16px;
+  background-color: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.consent {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 400 !important;
+  font-size: 0.82rem !important;
+  line-height: 1.5;
+  color: var(--text-muted) !important;
+  cursor: pointer;
+}
+
+.consent + .consent {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.consent input {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  margin-top: 1px;
+  accent-color: var(--text-main);
+  cursor: pointer;
+}
+
+/* Footer nav + errors */
+.form-error {
+  margin: 4px 0 12px;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  color: #B91C1C;
+  background-color: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: var(--radius-sm);
+}
+
+.form-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.form-nav .btn--secondary {
+  flex: none;
+  width: auto;
+  padding-inline: 24px;
+}
+
+/* Confirmation panel */
+.form-done {
+  text-align: center;
+  padding: 28px 8px 12px;
+  animation: stepIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.form-done__mark {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 18px;
+  font-size: 1.4rem;
+  color: #FFFFFF;
+  background-color: var(--accent-green);
+  border-radius: 50%;
+}
+
+.form-done h4 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.form-done p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.form-done__sig {
+  margin-top: 14px;
+  font-weight: 600;
+  color: var(--text-main) !important;
+}
+
+#googleFormSink {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .choice span {
+    font-size: 0.8rem;
+    padding: 7px 13px;
+  }
+}

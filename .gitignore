@@ -1,0 +1,10 @@
+# Scratch files from image processing / form-field extraction
+_*
+
+# Vercel CLI local state
+.vercel/
+
+# OS cruft
+Thumbs.db
+.DS_Store
+desktop.ini

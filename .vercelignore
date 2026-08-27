@@ -1,0 +1,22 @@
+# Local dev server — Vercel serves the static files itself
+serve.py
+
+# Scratch files from image processing
+_*
+
+# Source images. The site loads the processed .png / .webp versions of these;
+# the originals are kept locally so the images can be re-cut later.
+logo.jpeg
+flower.jpg
+flower2.jpg
+flower3.jpg
+flower4.jpg
+flower4.png
+flower5.jpg
+clientmain.jpg
+client pic.jpg
+
+# Superseded photos, no longer referenced by any page
+client2.webp
+client3.webp
+bg-plants.png
