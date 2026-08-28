@@ -55,3 +55,39 @@ source (`FB_PUBLIC_LOAD_DATA_`).
 Submission goes through a hidden iframe because Google rejects cross-origin `fetch`. That
 means the response cannot be read: the confirmation panel shows when the iframe loads or
 after 4 seconds, whichever is first. It is not proof the row was written.
+
+## Brand font (Roca One)
+
+The wordmark is set in **Roca One**, a commercial typeface. The font files are
+deliberately **not committed** — a webfont licence permits serving the font from
+your own site, but not redistributing the files, and this repo is public.
+
+`styles.css` already references `RocaOne.woff2` / `RocaOne.woff`. Without them the
+wordmark falls back to Instrument Serif and nothing breaks. To ship the real font,
+pick one:
+
+1. **Deploy with the Vercel CLI** (`vercel --prod`) from a local folder that has the
+   font files. The CLI uploads the directory directly, so the fonts never pass
+   through the public repo. `.vercelignore` keeps the source `.ttf` out.
+2. **Make the repo private**, then remove the three `RocaOne*` lines from
+   `.gitignore` and commit the fonts. Deploying from Git then works normally.
+3. **Use a free alternative** — Baloo 2 or Comfortaa are the closest matches on
+   Google Fonts. Swap the first entry in `--font-brand`.
+
+Regenerating the webfonts from a licensed `.ttf`:
+
+```bash
+pip install fonttools brotli
+python -c "from fontTools.ttLib import TTFont; f=TTFont('RocaOne-LtIt.ttf'); f.flavor='woff2'; f.save('RocaOne.woff2')"
+```
+
+## SEO
+
+`index.html` carries a JSON-LD `Psychologist` schema, Open Graph and Twitter cards.
+Three things need the live domain before search engines see the site properly:
+
+1. Uncomment the `canonical` / `og:url` block in `<head>` and set the real host.
+2. Replace `your-domain.com` in `sitemap.xml`.
+3. Uncomment the `Sitemap:` line in `robots.txt`.
+
+Then submit the sitemap in Google Search Console.

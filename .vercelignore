@@ -14,9 +14,14 @@ flower4.jpg
 flower4.png
 flower5.jpg
 clientmain.jpg
+clientsecond.jpg
+
+# Source font — the site loads the converted woff2/woff
+RocaOne-LtIt.ttf
 client pic.jpg
 
 # Superseded photos, no longer referenced by any page
 client2.webp
 client3.webp
+client-main.webp
 bg-plants.png

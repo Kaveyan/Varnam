@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMagneticButtons();
   initStatCounters();
   initMarqueeCloning();
+  initStepReveal();
   initBookingModal();
   updateFooterYear();
 });
@@ -209,6 +210,34 @@ function animateCounter(counterEl) {
   }
 
   requestAnimationFrame(update);
+}
+
+/* --------------------------------------------------------------------------
+   4b. Scroll reveals — How It Works steps and Areas of Practice cards
+   -------------------------------------------------------------------------- */
+function initStepReveal() {
+  // .step-reveal and .feature-reveal slide in from the right, .card-reveal
+  // rises from below — same observer, the direction is decided in CSS.
+  const steps = document.querySelectorAll('.step-reveal, .card-reveal, .feature-reveal');
+  if (!steps.length) return;
+
+  // No IntersectionObserver (or reduced motion): show them straight away
+  // rather than leaving the section empty.
+  if (!('IntersectionObserver' in window) ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    steps.forEach(s => s.classList.add('is-in'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-in');
+      io.unobserve(entry.target);   // reveal once, don't re-run on scroll back
+    });
+  }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
+
+  steps.forEach(s => io.observe(s));
 }
 
 /* --------------------------------------------------------------------------

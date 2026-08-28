@@ -8,3 +8,11 @@ _*
 Thumbs.db
 .DS_Store
 desktop.ini
+
+# Roca One is a commercial typeface. A webfont licence covers serving it from
+# your own site, but NOT redistributing the files — and this repo is public, so
+# committing them would publish the font to anyone who clones or forks.
+# The site still needs them at deploy time; see README for the options.
+RocaOne-LtIt.ttf
+RocaOne.woff
+RocaOne.woff2

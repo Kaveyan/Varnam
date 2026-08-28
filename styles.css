@@ -15,6 +15,8 @@
   --text-muted: #525866;
   --text-light: #868C98;
   
+  /* Sampled from logo-mark.png — 58% of the mark's opaque pixels */
+  --brand-teal: #03989E;
   --accent-green: #10B981;
   --accent-gold: #D97706;
   --accent-soft: #F3F4F6;
@@ -23,6 +25,8 @@
   --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
   --font-serif: 'Instrument Serif', serif;
+  /* Wordmark beside the logo — self-hosted, see the @font-face block below */
+  --font-brand: 'Roca One', 'Instrument Serif', Georgia, serif;
   
   --font-size-h1: clamp(2.5rem, 5vw + 1rem, 4.2rem);
   --font-size-h2: clamp(2rem, 3.5vw + 0.8rem, 3rem);
@@ -42,6 +46,26 @@
   
   --shadow-subtle: 0 4px 20px -2px rgba(10, 10, 12, 0.04);
   --shadow-hover: 0 20px 40px -4px rgba(10, 10, 12, 0.08);
+}
+
+/* ---------------------------------------------------------------------------
+   BRAND WORDMARK FONT — Roca One
+
+   Self-hosted from the licensed file (RocaOne-LtIt.ttf), converted to woff2/woff
+   for the web: 218 KB -> 62 KB.
+
+   The cut supplied is Roca One *Light Italic*. Its glyphs are already slanted but
+   the font's italic flag is not set, so this is declared font-style: normal —
+   otherwise the browser would fake a second slant on top of the real one.
+   --------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Roca One';
+  src: url('RocaOne.woff2') format('woff2'),
+       url('RocaOne.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 /* Reset & Global Base Styles */
@@ -219,9 +243,23 @@ body {
   line-height: 1.35;
   color: var(--text-main);
   letter-spacing: -0.01em;
-  margin-bottom: 34px;
+  margin-bottom: 16px;
   opacity: 0;
   animation: loaderQuoteIn 1s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+}
+
+/* Uppercased in CSS rather than in the markup, so screen readers read the
+   words instead of spelling out the letters. */
+.loader-tagline {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--text-light);
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: loaderQuoteIn 1s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
 }
 
 .loader-quote .serif-italic {
@@ -258,7 +296,8 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .loader-anim,
-  .loader-quote {
+  .loader-quote,
+  .loader-tagline {
     opacity: 1;
     animation: none;
   }
@@ -475,7 +514,7 @@ h3 {
 }
 
 .brand-name {
-  font-family: var(--font-serif);
+  font-family: var(--font-brand);
   font-size: 1.8rem;
   font-weight: 400;
   color: var(--text-main);
@@ -484,13 +523,28 @@ h3 {
 }
 
 .brand-sub {
-  font-family: var(--font-body);
+  font-family: var(--font-brand);
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-top: 2px;
+}
+
+/* Third line of the wordmark. Deliberately set in the body typeface rather
+   than Roca One, so it reads as a descriptor sitting under the logotype
+   instead of competing with it. */
+.brand-tag {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-light);
+  line-height: 1.2;
+  margin-top: 3px;
+  white-space: nowrap;
 }
 
 .nav-links {
@@ -655,7 +709,8 @@ h3 {
     box-shadow: var(--shadow-subtle);
   }
 
-  .hero-visual {
+  .hero-visual,
+  .about-floating-card {
     animation: none;
   }
 
@@ -775,6 +830,8 @@ h3 {
 /* About Section */
 .about-section {
   padding: var(--section-padding-desktop) 0;
+  /* credentials wait at translateX before revealing — contain that offset */
+  overflow-x: clip;
 }
 
 .about-grid {
@@ -813,6 +870,23 @@ h3 {
   gap: 12px;
   box-shadow: var(--shadow-hover);
   max-width: 290px;
+  /* Safe to animate directly: the tilt script writes its inline transform on
+     the parent .about-image-wrap, so the two compose instead of colliding.
+     6s is off-step from the hero badges (5.5s) and hero card (6.5s), so
+     nothing on the page drifts in unison. */
+  animation: aboutCardFloat 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes aboutCardFloat {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 12px 28px -10px rgba(10, 10, 12, 0.14);
+  }
+  50% {
+    transform: translateY(-10px);
+    box-shadow: 0 28px 46px -12px rgba(10, 10, 12, 0.18);
+  }
 }
 
 .floating-icon {
@@ -825,8 +899,21 @@ h3 {
 }
 
 .about-floating-card small {
+  display: block;
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+/* Her name sits under the practice line, set a touch darker so it reads as
+   the person rather than more descriptor text */
+.floating-name {
+  display: block;
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-main);
 }
 
 .features-list {
@@ -835,6 +922,32 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+/* Credentials slide in from the right as the list scrolls into view.
+   Applied straight to the <li> — these aren't .tilt-card elements, so there is
+   no inline transform to collide with and no wrapper is needed. */
+.js .feature-reveal {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.js .feature-reveal.is-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.js .feature-reveal:nth-child(2).is-in { transition-delay: 0.1s; }
+.js .feature-reveal:nth-child(3).is-in { transition-delay: 0.2s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .feature-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 .features-list li {
@@ -906,6 +1019,45 @@ h3 {
   gap: 32px;
 }
 
+/* Areas of Practice cards rise into place as they scroll into view.
+   Same wrapper trick as the How It Works steps: the transform lives here, not
+   on .offering-card, which is a .tilt-card whose script writes an inline
+   transform that would otherwise cancel the entrance. */
+.js .card-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.js .card-reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger by column so each row cascades left to right */
+.js .card-reveal:nth-child(3n + 2).is-in { transition-delay: 0.08s; }
+.js .card-reveal:nth-child(3n + 3).is-in { transition-delay: 0.16s; }
+
+/* The wrapper is the grid item now, so the card has to fill it or cards in a
+   row stop matching height */
+.card-reveal {
+  display: flex;
+}
+
+.card-reveal > .offering-card {
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .card-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 .offering-card {
   background-color: var(--bg-canvas);
   border: 1px solid var(--border-subtle);
@@ -942,6 +1094,10 @@ h3 {
 /* Process Section */
 .process-section {
   padding: var(--section-padding-desktop) 0;
+  /* Steps wait at translateX(56px) before revealing, which pokes past the
+     viewport edge. 'clip' contains it without creating a scroll container the
+     way overflow-x: hidden would. */
+  overflow-x: clip;
 }
 
 .process-grid {
@@ -955,6 +1111,36 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+/* Each step slides in from the right as it scrolls into view.
+   The transform lives on this wrapper, not on .step-card — the card is a
+   .tilt-card and the tilt script writes an inline transform on it, which would
+   otherwise cancel the entrance mid-flight.
+   Scoped to .js so the steps are visible if the script never runs. */
+.js .step-reveal {
+  opacity: 0;
+  transform: translateX(56px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.js .step-reveal.is-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Small stagger for when more than one enters the viewport at once */
+.js .step-reveal:nth-child(2).is-in { transition-delay: 0.12s; }
+.js .step-reveal:nth-child(3).is-in { transition-delay: 0.24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .step-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 .step-card {
@@ -1118,6 +1304,13 @@ h3 {
   height: auto;
   display: block;
   filter: drop-shadow(0 18px 32px rgba(10, 10, 12, 0.10));
+}
+
+/* The word "colour" picks up the logo's own teal.
+   3.33:1 on the section background — under the 4.5:1 needed for body copy, but
+   this quote renders at 28.8px+, which WCAG counts as large text (3:1). */
+.brand-colour {
+  color: var(--brand-teal);
 }
 
 .brand-quote p {
