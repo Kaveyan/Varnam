@@ -4,22 +4,31 @@
    ========================================================================== */
 
 :root {
-  /* Color System: Off-White Canvas & Pure White Card Containers */
-  --bg-canvas: #F8F9FB;
-  --bg-card: #FFFFFF;
-  --bg-glass: rgba(255, 255, 255, 0.75);
-  --border-subtle: #E2E4E9;
-  --border-glass: rgba(226, 228, 233, 0.8);
-  
-  --text-main: #0A0A0C;
-  --text-muted: #525866;
-  --text-light: #868C98;
-  
+  /* Colour system built from the supplied mint #73E6CB (hue 166°).
+     That mint is only 1.51:1 on white, so it can never carry text — it is used
+     for fills and surfaces, while darker steps of the SAME hue do the work
+     wherever contrast is required. The canvas is a warm cream, which the mint
+     sits against well. Every pairing below was measured. */
+  --bg-canvas: #FBF9E7;                    /* warm cream */
+  --bg-card: #FBF9E7;                      /* same cream — no pure white anywhere */
+  --bg-glass: rgba(251, 249, 231, 0.75);
+  --border-subtle: #E8E2C4;                /* warmed to sit on the cream */
+  --border-glass: rgba(232, 226, 196, 0.8);
+
+  --text-main: #0A0A0C;                    /* 18.66:1 on canvas */
+  --text-muted: #525866;                   /*  6.72:1 on canvas */
+  --text-light: #6B7280;                   /*  4.56:1 — #868C98 failed at 3.19 */
+
   /* Sampled from logo-mark.png — 58% of the mark's opaque pixels */
   --brand-teal: #03989E;
-  --accent-green: #10B981;
-  --accent-gold: #D97706;
-  --accent-soft: #F3F4F6;
+
+  --mint: #73E6CB;                         /* the supplied colour: fills only */
+  --mint-mid: #198A70;                     /*  4.28:1 — eyebrows, small labels */
+  --mint-deep: #14715B;                    /*  5.93:1 — accent text, links */
+
+  --accent-green: var(--mint-deep);
+  --accent-gold: var(--mint-mid);           /* was orange; unified on the mint hue */
+  --accent-soft: #EAF7F3;
   
   /* Typography Stacks & Fluid Clamp Scaling */
   --font-display: 'Space Grotesk', sans-serif;
@@ -193,8 +202,8 @@ body {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  /* Pure white, not the off-white canvas: loading.gif carries a solid white
-     backdrop of its own, so anything else leaves a visible square behind it. */
+  /* loading.gif was rebuilt with a cream backdrop to match, so the frame
+     blends into the overlay instead of showing as a pale square. */
   background-color: var(--bg-card);
   /* Fallback: if the script never runs, the overlay still clears itself
      rather than trapping the visitor behind it. */
@@ -412,13 +421,13 @@ h3 {
 }
 
 .btn--primary {
-  background-color: var(--text-main);
-  color: var(--bg-card);
-  box-shadow: 0 4px 14px rgba(10, 10, 12, 0.15);
+  background-color: var(--mint);
+  color: var(--text-main);              /* 13.10:1 on the mint */
+  box-shadow: 0 4px 14px rgba(20, 113, 91, 0.25);
 }
 
 .btn--primary:hover {
-  background-color: #27272A;
+  background-color: #5FDFC1;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(10, 10, 12, 0.22);
 }
@@ -476,7 +485,7 @@ h3 {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: rgba(248, 249, 251, 0.85);
+  background-color: rgba(251, 249, 231, 0.85);   /* cream, matching --bg-canvas */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-subtle);
@@ -515,7 +524,15 @@ h3 {
 
 .brand-name {
   font-family: var(--font-brand);
-  font-size: 1.8rem;
+  /* One line now ("Varnam Mind Care" rather than stacked), so it has to stay
+     compact — the navbar is already tight between 768px and 1100px.
+     Caps come from text-transform rather than the markup, so screen readers
+     read the name instead of spelling out each letter. Caps are ~14% wider,
+     hence the step down from 1.45rem. */
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
   font-weight: 400;
   color: var(--text-main);
   line-height: 1;
@@ -537,10 +554,10 @@ h3 {
    instead of competing with it. */
 .brand-tag {
   font-family: var(--font-body);
-  font-size: 0.6rem;
+  font-size: 0.56rem;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   color: var(--text-light);
   line-height: 1.2;
   margin-top: 3px;
@@ -593,19 +610,19 @@ h3 {
   height: 8px;
   background-color: var(--accent-green);
   border-radius: 50%;
-  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 0 0 rgba(20, 113, 91, 0.4);
   animation: pulseDot 2s infinite;
 }
 
 @keyframes pulseDot {
   0% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+    box-shadow: 0 0 0 0 rgba(20, 113, 91, 0.6);
   }
   70% {
-    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    box-shadow: 0 0 0 8px rgba(20, 113, 91, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    box-shadow: 0 0 0 0 rgba(20, 113, 91, 0);
   }
 }
 
@@ -828,6 +845,93 @@ h3 {
 }
 
 /* About Section */
+/* ==========================================================================
+   ABOUT THE PRACTICE — mission & vision
+   White band between the canvas-coloured hero and About Kowsalya, so the three
+   sections read as distinct rather than one long scroll.
+   ========================================================================== */
+
+.ethos-section {
+  padding: var(--section-padding-desktop) 0;
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow-x: clip;
+}
+
+.ethos-intro {
+  max-width: 680px;
+  margin: 0 auto clamp(40px, 5vw, 64px);
+  text-align: center;
+}
+
+.ethos-intro p {
+  font-size: var(--font-size-body);
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.ethos-line {
+  font-family: var(--font-serif);
+  font-size: clamp(1.3rem, 1.6vw + 0.9rem, 1.75rem);
+  color: var(--text-main);
+  margin-top: 28px;
+  margin-bottom: 0 !important;
+}
+
+.ethos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.ethos-card {
+  height: 100%;
+  background-color: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  box-shadow: var(--shadow-subtle);
+}
+
+.ethos-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--brand-teal);
+  margin-bottom: 14px;
+}
+
+.ethos-card h3 {
+  font-size: 1.25rem;
+  line-height: 1.3;
+  margin-bottom: 14px;
+}
+
+.ethos-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.ethos-pillars {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.82rem !important;
+  font-weight: 600;
+  color: var(--text-main) !important;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 1024px) {
+  .ethos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .about-section {
   padding: var(--section-padding-desktop) 0;
   /* credentials wait at translateX before revealing — contain that offset */
@@ -904,17 +1008,6 @@ h3 {
   color: var(--text-muted);
 }
 
-/* Her name sits under the practice line, set a touch darker so it reads as
-   the person rather than more descriptor text */
-.floating-name {
-  display: block;
-  margin-top: 5px;
-  padding-top: 5px;
-  border-top: 1px solid var(--border-subtle);
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-main);
-}
 
 .features-list {
   list-style: none;
@@ -941,6 +1034,7 @@ h3 {
 
 .js .feature-reveal:nth-child(2).is-in { transition-delay: 0.1s; }
 .js .feature-reveal:nth-child(3).is-in { transition-delay: 0.2s; }
+.js .feature-reveal:nth-child(4).is-in { transition-delay: 0.3s; }
 
 @media (prefers-reduced-motion: reduce) {
   .js .feature-reveal {
@@ -953,8 +1047,20 @@ h3 {
 .features-list li {
   padding-left: 28px;
   position: relative;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
   color: var(--text-muted);
+}
+
+/* Label leads each row, value follows in the muted body colour */
+.features-list li strong {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-main);
+  margin-bottom: 2px;
 }
 
 .features-list li::before {
@@ -1046,7 +1152,8 @@ h3 {
   display: flex;
 }
 
-.card-reveal > .offering-card {
+.card-reveal > .offering-card,
+.card-reveal > .ethos-card {
   width: 100%;
 }
 
@@ -1566,7 +1673,7 @@ cite span {
 .form-group select:focus,
 .form-group textarea:focus {
   border-color: var(--text-main);
-  background-color: #FFFFFF;
+  background-color: var(--bg-card);
 }
 
 /* Responsive Breakpoints */

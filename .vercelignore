@@ -15,6 +15,8 @@ flower4.png
 flower5.jpg
 clientmain.jpg
 clientsecond.jpg
+contact.jpg
+loading-white-bg.gif
 
 # Source font — the site loads the converted woff2/woff
 RocaOne-LtIt.ttf
@@ -24,4 +26,5 @@ client pic.jpg
 client2.webp
 client3.webp
 client-main.webp
+client1.webp
 bg-plants.png
