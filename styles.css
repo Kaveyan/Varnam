@@ -1594,6 +1594,29 @@ cite span {
   color: #FFFFFF;
 }
 
+/* Secondary route to the intake form, under the contact buttons */
+.contact-alt {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.link-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--mint-deep);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.link-btn:hover {
+  color: var(--text-main);
+}
+
 /* WhatsApp Session Booking Request Modal Dialog */
 .booking-modal {
   border: none;
@@ -2022,6 +2045,15 @@ cite span {
   font-size: 0.9rem;
   color: var(--text-muted);
   line-height: 1.6;
+}
+
+.form-done__book {
+  margin: 22px 0 14px;
+}
+
+.form-done__note {
+  font-size: 0.8rem !important;
+  color: var(--text-light) !important;
 }
 
 .form-done__sig {
