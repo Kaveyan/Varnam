@@ -126,6 +126,11 @@ function splitChildNodes(node) {
    2. 3D Card Depth Tilt (.tilt-card)
    -------------------------------------------------------------------------- */
 function init3DTilt() {
+  // Pointer-only. Touch devices synthesise mousemove on tap but frequently never
+  // fire mouseleave, which strands a card mid-tilt — rotated and scaled to 102%,
+  // so a full-width card overflows its container and looks knocked off-centre.
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
   const tiltCards = document.querySelectorAll('.tilt-card');
 
   tiltCards.forEach(card => {
@@ -153,6 +158,10 @@ function init3DTilt() {
    3. Magnetic Hover CTA Buttons (.magnetic-btn)
    -------------------------------------------------------------------------- */
 function initMagneticButtons() {
+  // Same reasoning as the tilt: a tap could otherwise leave a button translated
+  // away from where it belongs, with no mouseleave to put it back.
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
   const magneticBtns = document.querySelectorAll('.magnetic-btn');
 
   magneticBtns.forEach(btn => {
