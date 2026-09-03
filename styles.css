@@ -1537,6 +1537,38 @@ cite span {
   gap: 16px;
 }
 
+/* On a phone the card's 40px side padding leaves only ~247px of content box,
+   which three things overflow: the email row (by 11px), the Instagram row
+   (by 78px) and the two action buttons side by side (by 73px). The spill made
+   the card read as pushed off-centre. */
+@media (max-width: 640px) {
+  .contact-card {
+    padding: 32px 22px;          /* content box 247px -> 283px */
+  }
+
+  /* label above value — the Instagram handle alone is wider than the box
+     will ever be with a label beside it */
+  .contact-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 12px 0;
+  }
+
+  .row-v {
+    overflow-wrap: anywhere;     /* last resort for a long address */
+  }
+
+  /* stack the buttons instead of letting the row overflow */
+  .contact-actions {
+    flex-direction: column;
+  }
+
+  .contact-actions .btn {
+    width: 100%;
+  }
+}
+
 .contact-photo {
   border-radius: var(--radius-lg);
   overflow: hidden;
